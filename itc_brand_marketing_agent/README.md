@@ -10,7 +10,7 @@ The **ITC Brand Marketing AI Agent** empowers brand managers, creative directors
 
 ### 🚀 Key Capabilities:
 - **🎨 Photorealistic Display Advertising**: Generates native in-image 3D commercial typography and brand taglines with zero artificial digital overlays.
-- **📐 100% IAB LEAN Compliance**: Automatically validates and optimizes file weight (<150 KB) and aspect ratios across all 13 standard IAB banner units (300x250, 728x90, 300x600, 970x250, etc.) with lossless LANCZOS scaling.
+- **📐 100% IAB LEAN Compliance**: Automatically validates and optimizes file weight (under 150 KB) and aspect ratios across all 13 standard IAB banner units (300x250, 728x90, 300x600, 970x250, etc.) with lossless LANCZOS scaling.
 - **🎬 Cinematic Video Commercials (Google Veo)**: Produces broadcast-ready 16:9 in-stream commercial spots (6s) and 9:16 vertical reels (10s) with 3-act storyboards.
 - **🎯 Creative Hook & Strategy Synthesis**: Reads brand guidelines/briefs from `ITC Marketing Files/` or synthesizes 4-part sub-prompts (Hero, Background, Headline, CTA).
 - **📊 Omnichannel Media Planning**: Computes multi-channel budget allocations across YouTube, Meta, GDN, and Quick-Commerce (Blinkit/Zepto) with automated CSV exports.
@@ -24,55 +24,54 @@ The **ITC Brand Marketing AI Agent** empowers brand managers, creative directors
 
 ```mermaid
 flowchart TB
-    subgraph ClientLayer["🖥️ Client Interface Layer"]
+    subgraph ClientLayer ["Client Interface Layer"]
         GE["Gemini Enterprise Chat UI"]
         VAP["Vertex AI Agent Engine Playground"]
         CLI["Local ADK Interactive CLI"]
     end
 
-    subgraph AgentEngine["⚡ Vertex AI Reasoning Engine / Agent Engine"]
-        ADK["Google ADK Orchestrator\n(Gemini 2.5 Pro / Flash)"]
-        ArtServ["ADK Artifact Service\n(In-Chat Direct Download Cards)"]
+    subgraph AgentEngine ["Vertex AI Reasoning Engine / Agent Engine"]
+        ADK["Google ADK Orchestrator (Gemini 2.5 Pro)"]
+        ArtServ["ADK Artifact Service (Direct Download Cards)"]
     end
 
-    subgraph ToolSuite["🛠️ Autonomous Tool Engines"]
-        DocTool["📂 Doc Reader Engine\n- list_marketing_folders\n- read_marketing_document\n- save_marketing_document"]
-        BrandTool["📚 Brand Knowledge Engine\n- 11 ITC Brand DNAs\n- Sensory Triggers\n- Color Palettes & Logos"]
-        GenMediaTool["🎨 GenMedia Engine\n- generate_marketing_image\n- generate_marketing_video\n- edit_marketing_video\n- resize_image_to_iab_format"]
-        IABTool["📐 IAB Specs Engine\n- 13 IAB Format Matrices\n- LEAN Weight Validator\n- optimize_image_for_iab"]
-        CampaignTool["🚀 Campaign Engine\n- check_or_create_brief\n- check_or_create_hooks\n- build_full_itc_campaign"]
+    subgraph ToolSuite ["Autonomous Tool Engines"]
+        DocTool["Doc Reader Engine"]
+        BrandTool["Brand Knowledge Engine"]
+        GenMediaTool["GenMedia Engine"]
+        IABTool["IAB Specs Engine"]
+        CampaignTool["Campaign Engine"]
     end
 
-    subgraph FoundationModels["🧠 Foundation Models & APIs"]
-        GeminiPro["Gemini 2.5 Pro\n(Prompt Synthesis & Strategy)"]
-        GeminiFlashImg["Gemini 2.5 Flash Image / Imagen 3\n(Native Typography & Artwork)"]
-        Veo["Google Veo 3.1 Fast\n(Cinematic Commercials)"]
+    subgraph FoundationModels ["Foundation Models & APIs"]
+        GeminiPro["Gemini 2.5 Pro (Strategy & Art Direction)"]
+        GeminiFlashImg["Gemini 2.5 Flash Image / Imagen 3 (Native 3D Typography)"]
+        Veo["Google Veo 3.1 Fast (Commercial Videos)"]
     end
 
-    subgraph StorageLayer["🗄️ Storage & Distribution"]
-        GCS["Google Cloud Storage\ngs://itc-brand-marketing-assets-zuhaibp"]
-        LocalFS["Local Runtime Container FS\n/app/generated_assets"]
+    subgraph StorageLayer ["Storage & Distribution"]
+        GCS["Google Cloud Storage (Private Bucket)"]
+        LocalFS["Local Runtime Container Filesystem"]
     end
 
-    %% Flow Connections
-    ClientLayer -->|User Prompts & Media Requests| ADK
-    ADK -->|Reasoning & Tool Selection| ToolSuite
+    ClientLayer -->|"User Prompts & Requests"| ADK
+    ADK -->|"Reasoning & Tool Selection"| ToolSuite
     
-    ToolSuite -->|Brand Context| BrandTool
-    ToolSuite -->|Brand Docs & Briefs| DocTool
+    ToolSuite -->|"Brand Context"| BrandTool
+    ToolSuite -->|"Brand Docs & Briefs"| DocTool
     
-    GenMediaTool -->|Art Direction Prompt| GeminiPro
-    GeminiPro -->|Photorealistic 3D Typography Prompt| GeminiFlashImg
-    GenMediaTool -->|Video Script & Storyboard| Veo
+    GenMediaTool -->|"Art Direction Prompt"| GeminiPro
+    GeminiPro -->|"Photorealistic Typography"| GeminiFlashImg
+    GenMediaTool -->|"Video Script & Storyboard"| Veo
     
-    IABTool -->|LEAN Size Optimization (<150KB)| GenMediaTool
+    IABTool -->|"LEAN Weight Optimization"| GenMediaTool
     
-    GenMediaTool -->|Save Artifacts| ArtServ
-    GenMediaTool -->|Sync Assets| GCS
-    GenMediaTool -->|Local Cache| LocalFS
+    GenMediaTool -->|"Save Artifacts"| ArtServ
+    GenMediaTool -->|"Sync Assets"| GCS
+    GenMediaTool -->|"Local Cache"| LocalFS
     
-    ArtServ -->|1-Click Direct Download Attachment| ClientLayer
-    GCS -->|Authenticated Console Link| ClientLayer
+    ArtServ -->|"1-Click Direct Download"| ClientLayer
+    GCS -->|"Authenticated Console Link"| ClientLayer
 ```
 
 ---
@@ -110,7 +109,7 @@ itc_brand_marketing_agent/
 
 | Tool Name | Engine | Functionality |
 |---|---|---|
-| `generate_marketing_image` | GenMedia | Generates photorealistic IAB ads with native 3D typography and IAB LEAN compression (<150 KB). |
+| `generate_marketing_image` | GenMedia | Generates photorealistic IAB ads with native 3D typography and IAB LEAN compression (under 150 KB). |
 | `generate_marketing_video` | GenMedia / Veo | Produces 16:9 (6s) commercial spots or 9:16 (10s) reels with 3-act storyboards. |
 | `resize_image_to_iab_format` | GenMedia / PIL | Adapts existing master art to any IAB dimension using lossless LANCZOS scaling without stretching. |
 | `optimize_image_for_iab_compliance`| IAB Specs | Compresses any high-res banner to guarantee strict IAB LEAN payload limits. |
