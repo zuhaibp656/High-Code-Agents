@@ -1,146 +1,192 @@
-# ITC Brand Marketing AI Agent — Powered by Google ADK
+# 🍪 ITC Brand Marketing AI Agent
 
-An autonomous, high-code multi-agent marketing suite built natively with the **Google Agent Development Kit (ADK)** for **Gemini Enterprise / Vertex AI Agent Engine**. Designed specifically for **ITC Limited**, this agent inspects marketing documents (PDFs, spreadsheets, CSVs, brand guidelines) directly without requiring vector embeddings, synthesizes brand hooks, creative angles, audience segmentation, and multi-channel media plans, and generates **IAB-compliant display banners (Google Imagen 3 / Gemini Flash Image)** and **cinematic video advertisements (Google Veo)**.
+An autonomous, multi-modal generative marketing suite engineered for **ITC Limited** on the **Google Agent Development Kit (ADK)** and deployed directly to **Google Cloud Vertex AI Agent Engine (Reasoning Engine)** for **Gemini Enterprise**.
 
 ---
 
-## 🏗️ Architecture & Multi-Agent System
+## 🌟 Executive Summary
+
+The **ITC Brand Marketing AI Agent** empowers brand managers, creative directors, and media planners to plan, generate, resize, and validate omnichannel marketing assets across ITC’s brand portfolio (*Sunfeast Dark Fantasy, Bingo!, Fiama, Aashirvaad, Savlon, Engage, B Natural, Sunfeast Yippee!, Classmate, ITC Hotels, Fabelle*).
+
+### 🚀 Key Capabilities:
+- **🎨 Photorealistic Display Advertising**: Generates native in-image 3D commercial typography and brand taglines with zero artificial digital overlays.
+- **📐 100% IAB LEAN Compliance**: Automatically validates and optimizes file weight (<150 KB) and aspect ratios across all 13 standard IAB banner units (300x250, 728x90, 300x600, 970x250, etc.) with lossless LANCZOS scaling.
+- **🎬 Cinematic Video Commercials (Google Veo)**: Produces broadcast-ready 16:9 in-stream commercial spots (6s) and 9:16 vertical reels (10s) with 3-act storyboards.
+- **🎯 Creative Hook & Strategy Synthesis**: Reads brand guidelines/briefs from `ITC Marketing Files/` or synthesizes 4-part sub-prompts (Hero, Background, Headline, CTA).
+- **📊 Omnichannel Media Planning**: Computes multi-channel budget allocations across YouTube, Meta, GDN, and Quick-Commerce (Blinkit/Zepto) with automated CSV exports.
+- **💾 Dual-Distribution Architecture**: Generates in-chat downloadable session artifacts (0 GCP permissions needed for business users) with Cloud Storage synchronization.
+
+---
+
+## 🏗️ System Architecture
 
 ```mermaid
-flowchart TD
-    User([User / Gemini Enterprise Query]) --> RootAgent[ITC Master Orchestrator Agent\n'itc_brand_marketing_orchestrator'\ngemini-3.6-flash]
+flowchart TB
+    subgraph ClientLayer["🖥️ Client Interface Layer"]
+        GE["Gemini Enterprise Chat UI"]
+        VAP["Vertex AI Agent Engine Playground"]
+        CLI["Local ADK Interactive CLI"]
+    end
+
+    subgraph AgentEngine["⚡ Vertex AI Reasoning Engine / Agent Engine"]
+        ADK["Google ADK Orchestrator\n(Gemini 2.5 Pro / Flash)"]
+        ArtServ["ADK Artifact Service\n(In-Chat Direct Download Cards)"]
+    end
+
+    subgraph ToolSuite["🛠️ Autonomous Tool Engines"]
+        DocTool["📂 Doc Reader Engine\n- list_marketing_folders\n- read_marketing_document\n- save_marketing_document"]
+        BrandTool["📚 Brand Knowledge Engine\n- 11 ITC Brand DNAs\n- Sensory Triggers\n- Color Palettes & Logos"]
+        GenMediaTool["🎨 GenMedia Engine\n- generate_marketing_image\n- generate_marketing_video\n- edit_marketing_video\n- resize_image_to_iab_format"]
+        IABTool["📐 IAB Specs Engine\n- 13 IAB Format Matrices\n- LEAN Weight Validator\n- optimize_image_for_iab"]
+        CampaignTool["🚀 Campaign Engine\n- check_or_create_brief\n- check_or_create_hooks\n- build_full_itc_campaign"]
+    end
+
+    subgraph FoundationModels["🧠 Foundation Models & APIs"]
+        GeminiPro["Gemini 2.5 Pro\n(Prompt Synthesis & Strategy)"]
+        GeminiFlashImg["Gemini 2.5 Flash Image / Imagen 3\n(Native Typography & Artwork)"]
+        Veo["Google Veo 3.1 Fast\n(Cinematic Commercials)"]
+    end
+
+    subgraph StorageLayer["🗄️ Storage & Distribution"]
+        GCS["Google Cloud Storage\ngs://itc-brand-marketing-assets-zuhaibp"]
+        LocalFS["Local Runtime Container FS\n/app/generated_assets"]
+    end
+
+    %% Flow Connections
+    ClientLayer -->|User Prompts & Media Requests| ADK
+    ADK -->|Reasoning & Tool Selection| ToolSuite
     
-    subgraph Google ADK Sub-Agents
-        RootAgent --> Sub1[Campaign Strategy Sub-Agent\n'campaign_strategy_subagent'\ngemini-3.6-flash]
-        RootAgent --> Sub2[Creative Hook & Sub-Prompt Sub-Agent\n'creative_hook_subagent'\ngemini-3.6-flash]
-        RootAgent --> Sub3[Media Planning Sub-Agent\n'media_planning_subagent'\ngemini-3.6-flash]
-        RootAgent --> Sub4[GenMedia & IAB Compliance Sub-Agent\n'genmedia_iab_subagent'\ngemini-3.6-flash]
-    end
-
-    subgraph Core Engines & Tools
-        Sub1 --> DocReader[Document & Knowledge Engine\nDirect PDF / XLSX / CSV / MD reads]
-        Sub2 --> SubPrompts[Concept Orchestrator\nHero • Background • Headline • CTA]
-        Sub3 --> MediaPlanner[Media Plan & Budget Engine\nMulti-Channel Allocation & CSV Export]
-        Sub4 --> GenMedia[GenMedia & IAB Engine\nImagen 3 / Veo / PIL LANCZOS Resizing]
-    end
-
-    subgraph Output Deliverables & Cloud Storage
-        GenMedia --> DisplayBanners[IAB Display Banners\n300x250, 728x90, 970x250, 300x600, all 13 sizes]
-        GenMedia --> VideoAds[Video Ads & Storyboards\n16:9 In-Stream, 9:16 Reels/Shorts]
-        MediaPlanner --> CSVSpreadsheets[Multi-Channel Media Plans\nCSV & Markdown Tables]
-        GenMedia --> GCSStorage[Google Cloud Storage\ngs://itc-brand-marketing-assets-zuhaibp/]
-    end
+    ToolSuite -->|Brand Context| BrandTool
+    ToolSuite -->|Brand Docs & Briefs| DocTool
+    
+    GenMediaTool -->|Art Direction Prompt| GeminiPro
+    GeminiPro -->|Photorealistic 3D Typography Prompt| GeminiFlashImg
+    GenMediaTool -->|Video Script & Storyboard| Veo
+    
+    IABTool -->|LEAN Size Optimization (<150KB)| GenMediaTool
+    
+    GenMediaTool -->|Save Artifacts| ArtServ
+    GenMediaTool -->|Sync Assets| GCS
+    GenMediaTool -->|Local Cache| LocalFS
+    
+    ArtServ -->|1-Click Direct Download Attachment| ClientLayer
+    GCS -->|Authenticated Console Link| ClientLayer
 ```
 
 ---
 
-## 🌟 ITC Brand Coverage
+## 📂 Repository Structure
 
-The agent contains deep domain knowledge, color palette rules, sensory triggers, taglines, and historical marketing benchmarks for 11 flagship ITC brands:
-
-| Brand | Category | Key Products & Hero USPs | Primary Color Palette | Signature Aesthetic |
-| :--- | :--- | :--- | :--- | :--- |
-| **Sunfeast Dark Fantasy** | Foods (Indulgent Biscuits) | Choco Fills, Coffee Fills, Bourbon, Desserts | Dark Cacao (`#2A1810`), Molten Gold (`#D4AF37`) | Cinematic chiaroscuro, slow-mo molten chocolate core break |
-| **Aashirvaad** | Foods (Staples & Organic) | Chakki Atta, Select Sharbati, Organic Dals, Ghee | Golden Wheat (`#E5A93C`), Emerald Green (`#2E7D32`) | Sun-drenched harvest fields, soft steaming puffed rotis |
-| **Bingo!** | Foods (Snacks & Chips) | Mad Angles, Tedhe Medhe, Hashtags, Potato Chips | Electric Yellow (`#FFD700`), Fire Red (`#E60000`) | High-energy pop art, explosive spice powder blast |
-| **Sunfeast Yippee!** | Foods (Noodles & Pasta) | Magic Masala, Mood Masala, Power Up Atta | Sunshine Orange (`#FF6B00`), Tomato Red (`#E50914`) | Swirling fork twirl lifting non-sticky steaming noodles |
-| **B Natural** | Foods (Juices & Beverages) | 100% Pomegranate, Himalayan Apple, Mango | Orchard Green (`#388E3C`), Mango Gold (`#FFB300`) | Dew-kissed fruit slices, splashing 0% concentrate nectar |
-| **Fiama** | Personal Care (Shower Gels) | Blackcurrant Shower Gel, Gel Bathing Bars | Aqua Cyan (`#00B4D8`), Berry Violet (`#7209B7`) | Translucent jewel gels, micro-bubbles, aromatherapy spa |
-| **Savlon** | Personal Care (Hygiene) | Antiseptic Liquid, Moisture Shield Handwash | Medical Blue (`#005696`), Healing Orange (`#FF8C00`) | No-sting gentle healing, 99.99% germ shield hologram |
-| **Engage** | Personal Care (Fragrance) | Pocket Perfumes, Cologne Sprays, Deodorants | Midnight Navy (`#1A1A2E`), Crimson (`#E94560`) | Sleek pocket card sprays, neon nightlife romantic mist |
-| **Fabelle** | Foods (Ultra-Luxury Chocolates) | Gianduja, Single Origin Cacao, Elements Pralines | Obsidian Black (`#0D0D0D`), Matte Gold (`#C5A059`) | 24k gold leaf on ganache spheres, haute chocolaterie |
-| **ITC Hotels** | Hospitality (Luxury & Dining) | Grand Chola, Maurya, Royal Bengal, Bukhara | Royal Crimson (`#8B0000`), Gold (`#DAA520`) | Palatial Indian architecture, Dal Bukhara charcoal aroma |
-| **Classmate** | Education & Stationery | Pulse Notebooks, Interaktiv, Octane Pens | Smart Teal (`#00A896`), Deep Cyan (`#028090`) | Ultra-smooth chlorine-free paper, frictionless pen glide |
-
----
-
-## 📁 Direct Document Inspection (No Embeddings)
-
-Instead of complex vector databases or embeddings, the agent reads and writes directly into the filesystem under `ITC Marketing/ITC Marketing Files/`:
-- **`Campaign Hooks/`**: Strategy briefs (PDF/Markdown) outlining target personas and value propositions.
-- **`Creative Hooks/`**: High-energy audio hooks, visual scroll-stoppers, and 4-part sub-prompts.
-- **`Media Plan/`**: Multi-channel media budgets and channel mix.
-- **`Audience/`**: Detailed demographic and psychographic customer segments (`itc_customer_segments_demo.xlsx`).
-- **`Historical campaign and channel performance/`**: Real analytics CTR, VTR, and ROAS benchmarks (`itc_campaign_analytics_demo.csv`).
-- **`Brand Guidelines/`**: Corporate brand guidelines 2026 (`itc_limited_brand_guidelines_2026.md`) and official logo assets (`ITC.png`).
-
-**Dynamic Check-or-Create Workflow**: If a requested brand document is not present, the agent automatically synthesizes a professional document adhering to ITC brand standards and saves it into the folder for future use.
+```text
+itc_brand_marketing_agent/
+├── agent/
+│   ├── agent.py                      # Main ADK Agent Orchestrator & Instructions
+│   ├── __init__.py
+│   └── tools/
+│       ├── brand_knowledge_engine.py # Brand profiles, taglines, hex colors, and sensory hooks
+│       ├── campaign_engine.py        # Briefs, media budgets, and multi-channel campaign runner
+│       ├── doc_reader_engine.py      # PDF, TXT, and Markdown knowledge file ingestion
+│       ├── genmedia_engine.py        # Imagen 3, Gemini Flash Image, Veo 3.1, and IAB optimizer
+│       └── iab_specs_engine.py       # Official 13-unit IAB sizing matrix and LEAN validators
+├── IAB Formats/                      # Standard IAB dimension specifications
+├── ITC Marketing/                    # Brand guidelines, product images, and ITC logo assets
+├── generated_assets/                 # Output storage for images, videos, and media plan CSVs
+│   ├── images/
+│   ├── videos/
+│   └── reports/
+├── deploy.sh                         # Cloud deployment script to Vertex AI Agent Engine
+├── main.py                           # Local interactive runner
+├── requirements.txt                  # Python runtime dependencies
+└── README.md                         # Project documentation
+```
 
 ---
 
-## 📐 IAB New Ad Portfolio & LEAN Compliance Specifications
+## 🛠️ Tool Suite Specifications
 
-The agent strictly enforces all official IAB display and video ad requirements:
-
-| IAB Ad Unit | Dimension (px) | Aspect Ratio | Max Initial Load | Max Subload | Imagen / Veo Ratio | Channel Placement |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Medium Rectangle (MPU)** | 300x250 | 1:1 | 150 kB | 300 kB | `1:1` | GDN, Mobile & Desktop In-Feed |
-| **Leaderboard** | 728x90 | 8:1 | 150 kB | 300 kB | `16:9` | Desktop Header / Above-the-Fold |
-| **Billboard** | 970x250 | 4:1 | 250 kB | 500 kB | `16:9` | Premium Masthead Takeovers |
-| **Half Page / Filmstrip** | 300x600 | 1:2 | 200 kB | 400 kB | `9:16` | High-Impact Desktop Right Rail |
-| **Super Leaderboard** | 970x90 | 10:1 | 200 kB | 400 kB | `16:9` | Pushdown / Expandable Units |
-| **Skyscraper** | 160x600 | 1:4 | 150 kB | 300 kB | `9:16` | Side Gutters & News Portals |
-| **Large Rectangle** | 336x280 | 1:1 | 150 kB | 300 kB | `1:1` | In-Article High-CTR Units |
-| **Smartphone Banner** | 320x50 | 6:1 | 50 kB | 100 kB | `16:9` | Mobile Web Sticky Bottom |
-| **Mobile Interstitial** | 1080x1920 | 9:16 | 300 kB | 600 kB | `9:16` | Instagram Reels & YouTube Shorts |
-| **In-Stream Video Ad** | 1920x1080 | 16:9 | 300 kB | 600 kB | `16:9` | YouTube Bumper (6s) & Non-Skip |
+| Tool Name | Engine | Functionality |
+|---|---|---|
+| `generate_marketing_image` | GenMedia | Generates photorealistic IAB ads with native 3D typography and IAB LEAN compression (<150 KB). |
+| `generate_marketing_video` | GenMedia / Veo | Produces 16:9 (6s) commercial spots or 9:16 (10s) reels with 3-act storyboards. |
+| `resize_image_to_iab_format` | GenMedia / PIL | Adapts existing master art to any IAB dimension using lossless LANCZOS scaling without stretching. |
+| `optimize_image_for_iab_compliance`| IAB Specs | Compresses any high-res banner to guarantee strict IAB LEAN payload limits. |
+| `replicate_master_to_all_iab_formats`| GenMedia | Replicates master art across all 13 standard IAB ad units in a single invocation. |
+| `check_or_create_creative_hooks` | Campaign | Ingests or synthesizes brand hooks (Pattern Interrupt, Hook, Benefit, CTA). |
+| `check_or_create_media_plan` | Campaign | Allocates campaign budget across YouTube, Meta, GDN, and Quick-Commerce with CSV export. |
+| `build_full_itc_campaign` | Campaign | End-to-end orchestrator: brief + hooks + multi-size banners + video ad + budget CSV. |
 
 ---
 
-## 🎨 Generative Media Engines
+## 📐 IAB Display Ad Formats Supported
 
-### 1. Google Imagen 3 & Gemini Flash Image
-- Automatically enriches creative prompts with brand visual guidelines, hex palette harmony, studio lighting directions, and appetizing/luxury texture cues.
-- Automatically maps IAB unit dimensions to Imagen supported aspect ratios (`1:1`, `9:16`, `16:9`, `4:3`, `3:4`, `3:2`, `2:3`).
-- Uses high-quality PIL `ImageOps.fit` (LANCZOS) for distortion-free dynamic resizing across all **13 standard IAB constraints**.
-- Saves production PNG banners into `generated_assets/images/` and uploads to Google Cloud Storage.
-
-### 2. Google Veo Video Ads
-- Formulates complete 4-part commercial video storyboards:
-  - **Shot 1 (0.0s - 1.5s)**: 0.5s Pattern Interrupt Visual Hook (Explosive crunch / molten burst).
-  - **Shot 2 (1.5s - 4.0s)**: Product Hero Indulgence & Sensory Demonstration.
-  - **Shot 3 (4.0s - 5.5s)**: Emotional Climax & Consumer Joy.
-  - **Shot 4 (5.5s - 6.0s / 10.0s)**: Brand Outro & Call to Action (CTA) with sonic logo.
-- Supports **16:9 In-Stream Bumper Ads** and **9:16 Vertical Video Reels/Shorts**.
-- Saves video assets and full script metadata into `generated_assets/videos/`.
+| IAB Unit Name | Dimensions (px) | Aspect Ratio | Max Initial Load | Key Placement |
+|---|---|---|---|---|
+| **Medium Rectangle** | 300x250 | 1.2:1 (6:5) | 150 KB | Desktop & Mobile Universal Standard |
+| **Leaderboard** | 728x90 | 8.09:1 | 150 KB | Desktop Top Header |
+| **Half Page / Skyscraper** | 300x600 | 1:2 (9:16) | 200 KB | Brand Storytelling & Rich Media |
+| **Billboard** | 970x250 | 3.88:1 | 250 KB | Desktop Hero Placement |
+| **Mobile Leaderboard** | 320x50 | 6.4:1 | 50 KB | Mobile In-App / Sticky Footer |
+| **Wide Skyscraper** | 160x600 | 1:3.75 | 150 KB | Desktop Sidebar Navigation |
+| **Large Rectangle** | 336x280 | 1.2:1 | 150 KB | High-Impact Editorial Placements |
 
 ---
 
-## 🌐 Launch Google ADK Web UI / Agent Designer
+## 🚀 Deployment & Usage
 
+### 1. Local Environment Setup
 ```bash
-./web.sh
+# Clone and navigate to repository
+cd itc_brand_marketing_agent
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION
 ```
-Or specify a custom port:
+
+### 2. Run Locally in CLI Mode
 ```bash
-./web.sh 8080
+python main.py
 ```
-Open your browser at: **`http://127.0.0.1:8080`**
+
+### 3. Deploy to Vertex AI Agent Engine / Reasoning Engine
+```bash
+./deploy.sh
+```
+*Or deploy using Google ADK CLI directly:*
+```bash
+adk deploy agent_engine \
+  --project="YOUR_PROJECT_ID" \
+  --region="us-central1" \
+  --agent_engine_id="YOUR_REASONING_ENGINE_ID" \
+  --session_service_uri="agentengine://projects/YOUR_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID" \
+  --artifact_service_uri="memory://" \
+  --display_name="ITC Brand Marketing AI Agent" \
+  agent
+```
 
 ---
 
-## 💻 Interactive CLI Mode (Terminal)
+## 🌟 Sample Prompt Gallery
 
-```bash
-./run.sh
-```
+### 1. Photorealistic IAB Display Ad with Native Typography
+> *"Generate a 300x250 Medium Rectangle commercial ad for Bingo! Mad Angles featuring a crispy bowl of chips with friends laughing in the background, with the headline 'CRUNCH KA PUNCH' rendered natively into the artwork with golden cinematic lighting."*
+
+### 2. Multi-Size IAB Adaptation
+> *"Take the generated Sunfeast Dark Fantasy creative and resize it into a 728x90 Leaderboard and a 300x600 Half Page banner."*
+
+### 3. Cinematic Commercial Video (Google Veo)
+> *"Generate a 16:9 cinematic commercial video ad for Sunfeast Dark Fantasy Choco Fills showcasing the cookie breaking open in slow motion with rich molten chocolate flowing out."*
+
+### 4. Full Omnichannel Campaign Plan
+> *"Build a complete ₹50 Lakhs festive campaign for Aashirvaad Sharbati Atta including campaign brief, creative hooks, top IAB banners, a video ad, and a multi-channel media budget plan."*
 
 ---
 
-## 🧪 Verification & Testing
+## 📄 License & Compliance
 
-Execute the automated test suite:
-```bash
-./venv/bin/pytest -v test_agent.py
-```
-
-### Test Coverage (9/9 Passed):
-- `test_doc_reader_and_file_structure`: Validates direct reading of PDFs, Excel spreadsheets, CSVs, and markdown brand guidelines.
-- `test_itc_knowledge_and_brand_profiles`: Verifies brand intelligence, products, palettes, and sensory triggers for 11 brands.
-- `test_dynamic_document_check_or_create`: Verifies auto-checking and dynamic generation of briefs, hooks, and media plans.
-- `test_iab_spec_engine_and_13_constraints`: Validates all 17 IAB dimensions, file weight thresholds, and LEAN compliance.
-- `test_sub_prompt_synthesis`: Tests 4-part sub-prompt decomposition (*THE HERO*, *BACKGROUND*, *HEADLINE*, *CTA*).
-- `test_genmedia_image_and_video`: Tests image banner generation, Veo video ads, and PIL LANCZOS resizing.
-- `test_batch_replication_across_all_13_iab_sizes`: Tests replicating a master creative across all 13 standard IAB formats.
-- `test_campaign_planner_end_to_end`: Tests full multi-channel campaign generation with CSV spreadsheet export.
-- `test_adk_agent_architecture`: Validates Google ADK `root_agent` and all 4 sub-agent bindings.
+- **Framework**: Google Agent Development Kit (ADK)
+- **Standards**: Interactive Advertising Bureau (IAB) Standard Ad Unit Portfolio & LEAN Guidelines
+- **Target Platform**: Google Cloud Vertex AI & Gemini Enterprise
