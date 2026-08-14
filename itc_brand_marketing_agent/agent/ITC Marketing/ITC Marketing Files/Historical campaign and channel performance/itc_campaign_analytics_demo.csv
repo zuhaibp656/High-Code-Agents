@@ -1,0 +1,13 @@
+Campaign_ID,Campaign_Name,Target_Brand,Creative_Hook_ID,Channel,Impressions,Clicks,CTR_Percent,Total_Spend_INR,Conversions,CPA_INR,ROAS,Performance_Status
+CAMP_2026_01,Midnight Craving Escape,Sunfeast Dark Fantasy,Hook_VID_01,Blinkit & Zepto,250000,14500,5.80,120000,2900,8.28,5.40,High Performing
+CAMP_2026_02,Midnight Craving Escape,Sunfeast Dark Fantasy,Hook_VID_01,Instagram Reels,450000,10350,2.30,150000,1150,14.49,3.10,Average
+CAMP_2026_03,Soft Rotis Warm Hearts,Aashirvaad Atta,Hook_AUD_01,Meta/Facebook,680000,10200,1.50,200000,850,235.29,1.90,Underperforming
+CAMP_2026_04,Gaming Chaos Snacking,Bingo! Tedhe Medhe,Hook_VID_02,YouTube Shorts,890000,30260,3.40,250000,3800,65.79,4.20,High Performing
+CAMP_2026_05,The Aroma of Purity,Aashirvaad Ghee,Hook_AUD_02,YouTube Cooking Channels,350000,14700,4.20,100000,2100,6.80,4.80,High Performing
+CAMP_2026_06,Wash Away Day Stress,Fiama Body Wash,Hook_VID_01,Instagram Reels,520000,15080,2.90,180000,1650,109.09,3.50,Average
+CAMP_2026_07,Sting-free Protection,Savlon Handwash,Hook_VID_02,Parenting Portals/Meta,310000,5580,1.80,90000,420,161.43,2.20,Average
+CAMP_2026_08,Board Exam Smooth Paper,Classmate Notebooks,Hook_VID_01,YouTube Education,750000,21000,2.80,150000,2400,7.14,3.10,Average
+CAMP_2026_09,Trace Your Plate Organic,Aashirvaad Organic,Hook_VID_02,Google Search Ads,120000,1320,1.10,75000,140,568.18,1.60,Underperforming
+CAMP_2026_10,Date Night Fresh Scent,Engage Deodorant,Hook_AUD_01,Tinder & Bumble,180000,7380,4.10,60000,980,8.16,3.90,High Performing
+CAMP_2026_11,Pure Milk Goodness,Aashirvaad Svasti,Hook_AUD_02,Local Radio AP,500000,0,0.00,50000,0,0.00,0.00,Offline Brand Lift
+CAMP_2026_12,Eco Executive Luxury,Paperkraft Notebooks,Hook_VID_01,LinkedIn Ads,140000,3500,2.50,80000,280,228.57,2.80,Average

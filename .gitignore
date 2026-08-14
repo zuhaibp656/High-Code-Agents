@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Secrets & Configs
+.env
+*.pem
+*.key
+
+# Temporary Build Files
+agent_tmp*
+.pytest_cache/
+.DS_Store
+Thumbs.db

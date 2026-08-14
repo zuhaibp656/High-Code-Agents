@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="ad.size" content="width=300,height=250">
+    <title>Bingo! - IAB Banner (300x250)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 300px;
+            height: 250px;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #FFD700 0%, #8A2BE2 100%);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+        .ad-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            padding: 12px;
+            color: #FFFFFF;
+        }
+        .brand-badge {
+            font-size: 14px;
+            font-weight: 800;
+            color: #E60000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+        .headline {
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left;
+            line-height: 1.2;
+            color: #FFF;
+            max-width: 80%;
+        }
+        .cta-button {
+            background: #E60000;
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: #FFFFFF;
+        }
+        .iab-iba-icon {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 8px;
+            color: rgba(255,255,255,0.6);
+            background: rgba(0,0,0,0.4);
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ad-container" onclick="window.open('https://www.itcportal.com', '_blank')">
+        <div class="brand-badge">Bingo!</div>
+        <div class="headline">Vibrant high-energy display banner for Bingo! Mad Angles snacks themed for IPL cricket match days. Dynamic stadium backdrop with bright floodlights, bold explosive spice colors, triangular crunchy chips flying in mid-air, product packet clearly featured, with snappy call-out 'Har Angle Se Perfect Match Day Snack!'. High quality, vivid marketing visual.</div>
+        <a class="cta-button" href="javascript:void(0);">Buy Now &rarr;</a>
+    </div>
+    <div class="iab-iba-icon" title="Interest Based Advertising (IAB Compliant)">AdChoices &#9654;</div>
+</body>
+</html>

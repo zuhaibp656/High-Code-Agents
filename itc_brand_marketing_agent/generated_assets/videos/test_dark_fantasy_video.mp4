@@ -1,0 +1,24 @@
+<!-- Video Storyboard for Sunfeast Dark Fantasy: Sunfeast Dark Fantasy Choco Fills commercial, cookie breaking with liquid chocolate pouring out -->
+[
+  {
+    "timestamp": "0.0s - 1.5s",
+    "scene": "0.5s Pattern Interrupt Hook",
+    "visual": "Hyper-close macro shot of Sunfeast Dark Fantasy Molten liquid choco burst. Dynamic camera push-in with cinematic motion blur.",
+    "audio": "Loud sensory sound effect followed by upbeat tempo kick-in.",
+    "text": "Can't Wait, Won't Wait"
+  },
+  {
+    "timestamp": "1.5s - 4.0s",
+    "scene": "Product Hero Indulgence",
+    "visual": "Gleaming 3D cinematic rotation of Dark Fantasy Choco Fills. Color grading in #2A1810 & #D4AF37.",
+    "audio": "Warm voiceover: 'Feel the true magic of Sunfeast Dark Fantasy.'",
+    "text": "100% Pure \u2022 Molten Chocolate Indulgence"
+  },
+  {
+    "timestamp": "4.0s - 6.0s",
+    "scene": "Brand Outro & Call to Action",
+    "visual": "Signature packaging beauty shot with glowing CTA badge.",
+    "audio": "Brand sonic logo melody.",
+    "text": "Order Now on Blinkit & Zepto"
+  }
+]

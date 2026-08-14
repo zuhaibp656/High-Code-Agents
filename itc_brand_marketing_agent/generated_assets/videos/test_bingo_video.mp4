@@ -1,0 +1,24 @@
+<!-- Video Storyboard for Bingo!: High energy reel with explosive crunch -->
+[
+  {
+    "timestamp": "0.0s - 1.5s",
+    "scene": "0.5s Pattern Interrupt Hook",
+    "visual": "Hyper-close macro shot of Bingo! Loud dynamic snap crunch. Dynamic camera push-in with cinematic motion blur.",
+    "audio": "Loud sensory sound effect followed by upbeat tempo kick-in.",
+    "text": "Har Angle Se Mmm..."
+  },
+  {
+    "timestamp": "1.5s - 4.0s",
+    "scene": "Product Hero Indulgence",
+    "visual": "Gleaming 3D cinematic rotation of Bingo! Mad Angles Achaari Masti. Color grading in #FFD700 & #E60000.",
+    "audio": "Warm voiceover: 'Feel the true magic of Bingo!.'",
+    "text": "100% Pure \u2022 Irreverent Humor"
+  },
+  {
+    "timestamp": "4.0s - 6.0s",
+    "scene": "Brand Outro & Call to Action",
+    "visual": "Signature packaging beauty shot with glowing CTA badge.",
+    "audio": "Brand sonic logo melody.",
+    "text": "Order Now on Blinkit & Zepto"
+  }
+]

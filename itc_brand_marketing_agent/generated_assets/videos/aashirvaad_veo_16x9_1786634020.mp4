@@ -1,0 +1,24 @@
+<!-- Video Storyboard for Aashirvaad: Cinematic festive diwali commercial featuring Aashirvaad -->
+[
+  {
+    "timestamp": "0.0s - 1.5s",
+    "scene": "0.5s Pattern Interrupt Hook",
+    "visual": "Hyper-close macro shot of Aashirvaad Aroma of freshly roasted wheat. Dynamic camera push-in with cinematic motion blur.",
+    "audio": "Loud sensory sound effect followed by upbeat tempo kick-in.",
+    "text": "Shuddhata Ka Asli Aashirvaad"
+  },
+  {
+    "timestamp": "1.5s - 4.0s",
+    "scene": "Product Hero Indulgence",
+    "visual": "Gleaming 3D cinematic rotation of Aashirvaad Shudh Chakki Atta. Color grading in #E5A93C & #2E7D32.",
+    "audio": "Warm voiceover: 'Feel the true magic of Aashirvaad.'",
+    "text": "100% Pure \u2022 Uncompromised Purity"
+  },
+  {
+    "timestamp": "4.0s - 6.0s",
+    "scene": "Brand Outro & Call to Action",
+    "visual": "Signature packaging beauty shot with glowing CTA badge.",
+    "audio": "Brand sonic logo melody.",
+    "text": "Order Now on Blinkit & Zepto"
+  }
+]
