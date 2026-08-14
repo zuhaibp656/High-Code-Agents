@@ -635,10 +635,10 @@ def generate_marketing_video(
                 model='publishers/google/models/veo-3.1-fast-generate-001',
                 prompt=enhanced_prompt
             )
-            # Poll for completion for up to 60 seconds
+            # Poll for completion for up to 120 seconds (Veo requires 60-90s for full rendering)
             polls = 0
-            while not op.done and polls < 6:
-                time.sleep(10)
+            while not op.done and polls < 24:
+                time.sleep(5)
                 op = client.operations.get(op)
                 polls += 1
 
@@ -646,14 +646,17 @@ def generate_marketing_video(
                 with open(output_path, "wb") as f:
                     f.write(op.result.generated_videos[0].video.video_bytes)
                 generated_via_api = True
-        except Exception:
-            pass
+            elif op.error:
+                print(f"Veo API Operation Error: {op.error}")
+        except Exception as veo_err:
+            print(f"Veo Generation Exception: {veo_err}")
 
-    if not generated_via_api:
-        # Create a structured storyboard representation
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(f"<!-- Video Storyboard for {brand_data['brand_name']}: {prompt} -->\n")
+    if not generated_via_api and not os.path.exists(output_path):
+        # Save structured storyboard as fallback json
+        storyboard_path = output_path.replace(".mp4", "_storyboard.json")
+        with open(storyboard_path, "w", encoding="utf-8") as f:
             f.write(json.dumps(storyboard, indent=2))
+        _upload_to_gcs(storyboard_path, f"videos/{os.path.basename(storyboard_path)}")
 
     gcs_uri, console_url = _upload_to_gcs(output_path, f"videos/{output_filename}")
 
