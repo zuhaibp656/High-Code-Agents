@@ -20,6 +20,8 @@ The **ITC Brand Marketing AI Agent** empowers brand managers, creative directors
 
 ## 🏗️ System Architecture
 
+![System Architecture](assets/architecture_diagram.png)
+
 ```mermaid
 flowchart TB
     subgraph ClientLayer["🖥️ Client Interface Layer"]
@@ -88,6 +90,8 @@ itc_brand_marketing_agent/
 │       ├── doc_reader_engine.py      # PDF, TXT, and Markdown knowledge file ingestion
 │       ├── genmedia_engine.py        # Imagen 3, Gemini Flash Image, Veo 3.1, and IAB optimizer
 │       └── iab_specs_engine.py       # Official 13-unit IAB sizing matrix and LEAN validators
+├── assets/
+│   └── architecture_diagram.png      # High-Resolution Visual Architecture Diagram
 ├── IAB Formats/                      # Standard IAB dimension specifications
 ├── ITC Marketing/                    # Brand guidelines, product images, and ITC logo assets
 ├── generated_assets/                 # Output storage for images, videos, and media plan CSVs
