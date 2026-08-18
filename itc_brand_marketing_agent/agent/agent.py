@@ -34,7 +34,10 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = os.environ.get("GOOGLE_CLOUD_LOCATION", "u
 # Vertex AI Pro reasoning engine for master orchestrator
 vertex_model = Gemini(model_name="gemini-2.5-pro", client_kwargs={"vertexai": True})
 
-# Sub-agents removed to favor a robust single-agent architecture
+from .sub_agents.campaign_hook_agent import campaign_hook_agent
+from .sub_agents.creative_hook_agent import creative_hook_agent
+from .sub_agents.media_plan_agent import media_plan_agent
+from .sub_agents.genmedia_iab_agent import genmedia_iab_agent
 
 from .tools.doc_reader_engine import (
     list_marketing_folders,
@@ -108,6 +111,12 @@ root_agent = Agent(
     model=vertex_model,
     description="ITC Brand Marketing AI Master Orchestrator Agent built with Google ADK. Generates IAB-approved display banners, Veo video ads, and multi-channel media plans with dynamic sizing and direct downloads.",
     instruction=MAIN_AGENT_INSTRUCTION,
+    sub_agents=[
+        campaign_hook_agent,
+        creative_hook_agent,
+        media_plan_agent,
+        genmedia_iab_agent
+    ],
     tools=[
         list_marketing_folders,
         read_marketing_document,
