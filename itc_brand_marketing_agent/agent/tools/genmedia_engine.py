@@ -633,7 +633,7 @@ def generate_marketing_video(
                 
             op = client.models.generate_videos(
                 model='publishers/google/models/veo-3.1-fast-generate-001',
-                prompt=enhanced_prompt
+                source={"prompt": enhanced_prompt}
             )
             # Poll for completion for up to 120 seconds (Veo requires 60-90s for full rendering)
             polls = 0

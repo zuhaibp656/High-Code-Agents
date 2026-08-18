@@ -393,7 +393,7 @@ def generate_veo_video_ad(
             )
             op = client.models.generate_videos(
                 model="veo-2.0-generate-001",
-                prompt=enriched_veo_prompt,
+                source={"prompt": enriched_veo_prompt},
                 config=config
             )
             generated_via_api = True
