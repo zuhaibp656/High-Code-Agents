@@ -28,7 +28,24 @@ except Exception:
 from google.adk.agents.llm_agent import Agent
 from google.adk.models.google_llm import Gemini
 
-os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ.get("GOOGLE_CLOUD_PROJECT", "zuhaibp-ai")
+def _detect_gcp_project() -> str:
+    if os.environ.get("GOOGLE_CLOUD_PROJECT"):
+        return os.environ["GOOGLE_CLOUD_PROJECT"]
+    if os.environ.get("GCP_PROJECT"):
+        return os.environ["GCP_PROJECT"]
+    try:
+        import subprocess
+        res = subprocess.run(["gcloud", "config", "get-value", "project"], capture_output=True, text=True, timeout=2)
+        proj = res.stdout.strip()
+        if proj and "unset" not in proj:
+            return proj
+    except Exception:
+        pass
+    return ""
+
+_detected_project = _detect_gcp_project()
+if _detected_project:
+    os.environ["GOOGLE_CLOUD_PROJECT"] = _detected_project
 os.environ["GOOGLE_CLOUD_LOCATION"] = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 
 # Vertex AI Pro reasoning engine for master orchestrator

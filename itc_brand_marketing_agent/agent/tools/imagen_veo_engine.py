@@ -46,19 +46,30 @@ IMAGES_DIR = os.path.join(ASSETS_DIR, "images")
 VIDEOS_DIR = os.path.join(ASSETS_DIR, "videos")
 BANNERS_DIR = os.path.join(ASSETS_DIR, "banners_html5")
 
-GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME", "itc-brand-marketing-assets-zuhaibp")
+def _get_project_id() -> str:
+    return os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT") or ""
+
+def _get_gcs_bucket_name() -> str:
+    if os.environ.get("GCS_BUCKET_NAME"):
+        return os.environ["GCS_BUCKET_NAME"]
+    proj = _get_project_id()
+    return f"itc-brand-marketing-assets-{proj}" if proj else "itc-brand-marketing-assets"
+
+GCS_BUCKET_NAME = _get_gcs_bucket_name()
 
 def upload_asset_to_gcs(local_filepath: str, subfolder: str = "images") -> Optional[str]:
     """Uploads generated asset to Google Cloud Storage and returns authenticated web console URL."""
     try:
         from google.cloud import storage
-        client = storage.Client(project=os.environ.get("GOOGLE_CLOUD_PROJECT", "zuhaibp-ai"))
-        bucket = client.bucket(GCS_BUCKET_NAME)
+        project_id = _get_project_id()
+        bucket_name = _get_gcs_bucket_name()
+        client = storage.Client(project=project_id) if project_id else storage.Client()
+        bucket = client.bucket(bucket_name)
         filename = os.path.basename(local_filepath)
         blob_path = f"{subfolder}/{filename}"
         blob = bucket.blob(blob_path)
         blob.upload_from_filename(local_filepath)
-        return f"https://storage.cloud.google.com/{GCS_BUCKET_NAME}/{blob_path}"
+        return f"https://storage.cloud.google.com/{bucket_name}/{blob_path}"
     except Exception:
         return None
 
@@ -231,7 +242,8 @@ def generate_imagen_banner(
     compliance = validate_asset_against_iab_lean(spec["unit_name"], file_size_kb=file_size_kb)
 
     # Clean, direct Google Cloud Storage download link
-    clean_download_link = gcs_download_url if gcs_download_url else f"https://console.cloud.google.com/storage/browser/{GCS_BUCKET_NAME}/images?project=zuhaibp-ai"
+    proj = _get_project_id()
+    clean_download_link = gcs_download_url if gcs_download_url else (f"https://console.cloud.google.com/storage/browser/{GCS_BUCKET_NAME}/images?project={proj}" if proj else "")
 
     # Direct Download & Interactive Action Buttons for Gemini Enterprise
     action_cards = {
@@ -405,7 +417,8 @@ def generate_veo_video_ad(
             f.write(f"<!-- Simulated Veo 2 Video Asset: {enriched_veo_prompt} -->\n")
             
     gcs_video_url = upload_asset_to_gcs(filepath, "videos")
-    clean_video_link = gcs_video_url if gcs_video_url else f"https://console.cloud.google.com/storage/browser/{GCS_BUCKET_NAME}/videos?project=zuhaibp-ai"
+    proj = _get_project_id()
+    clean_video_link = gcs_video_url if gcs_video_url else (f"https://console.cloud.google.com/storage/browser/{GCS_BUCKET_NAME}/videos?project={proj}" if proj else "")
 
     return {
         "status": "SUCCESS",

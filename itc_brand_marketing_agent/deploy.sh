@@ -11,7 +11,7 @@ echo " Model: gemini-2.5-pro • gemini-2.5-flash • Gemini Flash Image • Veo
 echo " Region: us-central1 (Iowa)"
 echo "=========================================================="
 
-CURRENT_PROJECT=$(gcloud config get-value project 2>/dev/null | grep -v "unset" || echo "zuhaibp-ai")
+CURRENT_PROJECT=$(gcloud config get-value project 2>/dev/null | grep -v "unset" || echo "")
 
 read -p "Enter GCP Project ID [${CURRENT_PROJECT}]: " PROJECT_ID
 PROJECT_ID=${PROJECT_ID:-$CURRENT_PROJECT}

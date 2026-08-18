@@ -121,7 +121,8 @@ def build_full_itc_campaign(
         f.write(csv_content)
         
     gcs_csv_url = upload_asset_to_gcs(csv_filepath, "reports")
-    clean_csv_link = gcs_csv_url if gcs_csv_url else f"https://console.cloud.google.com/storage/browser/{GCS_BUCKET_NAME}/reports?project=zuhaibp-ai"
+    proj = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+    clean_csv_link = gcs_csv_url if gcs_csv_url else (f"https://console.cloud.google.com/storage/browser/{GCS_BUCKET_NAME}/reports?project={proj}" if proj else "")
 
     return {
         "status": "CAMPAIGN_GENERATED",

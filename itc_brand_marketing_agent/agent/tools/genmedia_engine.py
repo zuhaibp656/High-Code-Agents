@@ -38,24 +38,34 @@ os.makedirs(IMAGES_DIR, exist_ok=True)
 os.makedirs(VIDEOS_DIR, exist_ok=True)
 os.makedirs(BANNERS_DIR, exist_ok=True)
 
-GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME", "itc-brand-marketing-assets-zuhaibp")
+def _get_project_id() -> str:
+    return os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT") or ""
+
+def _get_gcs_bucket_name() -> str:
+    if os.environ.get("GCS_BUCKET_NAME"):
+        return os.environ["GCS_BUCKET_NAME"]
+    proj = _get_project_id()
+    return f"itc-brand-marketing-assets-{proj}" if proj else "itc-brand-marketing-assets"
+
+GCS_BUCKET_NAME = _get_gcs_bucket_name()
 
 
 def _upload_to_gcs(local_path: str, blob_name: str):
     """Uploads a local file to GCS and returns (gcs_uri, console_url)."""
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "zuhaibp-ai")
-    gcs_uri = f"gs://{GCS_BUCKET_NAME}/{blob_name}"
-    console_url = f"https://console.cloud.google.com/storage/browser/_details/{GCS_BUCKET_NAME}/{blob_name}?project={project_id}"
+    project_id = _get_project_id()
+    bucket_name = _get_gcs_bucket_name()
+    gcs_uri = f"gs://{bucket_name}/{blob_name}"
+    console_url = f"https://console.cloud.google.com/storage/browser/_details/{bucket_name}/{blob_name}?project={project_id}" if project_id else ""
 
     try:
         from google.cloud import storage
-        storage_client = storage.Client(project=project_id)
-        bucket = storage_client.bucket(GCS_BUCKET_NAME)
+        storage_client = storage.Client(project=project_id) if project_id else storage.Client()
+        bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(blob_name)
         blob.upload_from_filename(local_path)
         return gcs_uri, console_url
     except Exception as e:
-        print(f"GCS Upload Error: {e}")
+        print(f"GCS Upload Note: {e}")
         return "", ""
 
 
@@ -63,12 +73,13 @@ def _get_genai_client():
     """Initializes Google GenAI Client using Vertex AI (with ADC) or API Key."""
     try:
         from google import genai
-        project = os.environ.get("GOOGLE_CLOUD_PROJECT", "zuhaibp-ai")
+        project = _get_project_id()
         location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
-        try:
-            return genai.Client(vertexai=True, project=project, location=location)
-        except Exception:
-            pass
+        if project:
+            try:
+                return genai.Client(vertexai=True, project=project, location=location)
+            except Exception:
+                pass
 
         api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         if api_key:
