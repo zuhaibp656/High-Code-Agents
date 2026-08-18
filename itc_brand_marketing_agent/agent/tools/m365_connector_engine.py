@@ -242,8 +242,9 @@ def check_available_connectors() -> Dict[str, Any]:
     """
     datastore_id = os.environ.get("M365_DATASTORE_ID") or os.environ.get("VERTEX_DATASTORE_ID")
     teams_webhook = os.environ.get("M365_TEAMS_WEBHOOK_URL")
-    gcs_bucket = os.environ.get("GCS_BUCKET_NAME", "itc-brand-marketing-assets-v2-zuhaibp-ai")
-    gcp_project = os.environ.get("GOOGLE_CLOUD_PROJECT", "zuhaibp-ai")
+    proj = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT") or ""
+    gcs_bucket = os.environ.get("GCS_BUCKET_NAME") or (f"itc-brand-marketing-assets-v2-{proj}" if proj else "itc-brand-marketing-assets-v2")
+    gcp_project = proj
 
     try:
         from tools.doc_reader_engine import scan_itc_marketing_workspace
