@@ -219,5 +219,40 @@ def test_adk_agent_architecture():
     assert "genmedia_iab_subagent" in sub_names
 
 
+def test_m365_connector_engine():
+    """Verifies Microsoft 365 SharePoint, Teams, and Outlook connector functions."""
+    from agent.tools.m365_connector_engine import (
+        search_enterprise_sharepoint_knowledge,
+        teams_post_campaign_preview,
+        outlook_send_campaign_summary
+    )
+
+    # 1. Test SharePoint Search / Fallback
+    sp_res = search_enterprise_sharepoint_knowledge("Dark Fantasy indulgence guidelines")
+    assert sp_res["query"] == "Dark Fantasy indulgence guidelines"
+    assert sp_res["results_count"] >= 1
+
+    # 2. Test Teams Campaign Card Formatting
+    teams_res = teams_post_campaign_preview(
+        brand_name="Sunfeast Dark Fantasy",
+        campaign_theme="festive_indulgence",
+        headline="Pure Choco Indulgence",
+        banner_download_urls=["https://storage.cloud.google.com/test/banner.png"],
+        video_download_url="https://storage.cloud.google.com/test/video.mp4",
+        media_plan_csv_url="https://storage.cloud.google.com/test/plan.csv"
+    )
+    assert teams_res["status"] in ["SIMULATED_SUCCESS", "DELIVERED"]
+
+    # 3. Test Outlook Dispatch Summary
+    outlook_res = outlook_send_campaign_summary(
+        recipient_email="brandmanager@itc.in",
+        brand_name="Sunfeast Dark Fantasy",
+        campaign_theme="festive_indulgence",
+        summary_text="Omnichannel Diwali Campaign Assets Ready."
+    )
+    assert outlook_res["status"] == "PREPARED"
+    assert outlook_res["recipient"] == "brandmanager@itc.in"
+
+
 if __name__ == "__main__":
     pytest.main(["-v", __file__])

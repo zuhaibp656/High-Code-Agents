@@ -69,6 +69,11 @@ from .tools.brand_knowledge_engine import (
     check_or_create_creative_hooks,
     check_or_create_media_plan
 )
+from .tools.m365_connector_engine import (
+    search_enterprise_sharepoint_knowledge,
+    teams_post_campaign_preview,
+    outlook_send_campaign_summary
+)
 from .tools.iab_specs_engine import (
     lookup_iab_spec,
     get_all_iab_specs,
@@ -153,7 +158,10 @@ root_agent = Agent(
         replicate_master_to_all_iab_formats,
         synthesize_creative_sub_prompts,
         build_full_itc_campaign,
-        lookup_iab_spec
+        lookup_iab_spec,
+        search_enterprise_sharepoint_knowledge,
+        teams_post_campaign_preview,
+        outlook_send_campaign_summary
     ]
 )
 
