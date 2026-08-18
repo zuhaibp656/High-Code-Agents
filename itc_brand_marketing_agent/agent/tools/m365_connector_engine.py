@@ -81,26 +81,26 @@ def search_enterprise_sharepoint_knowledge(query: str, max_results: int = 5) -> 
             pass
 
     # 2. Local Fallback (ITC Marketing Files / Brand Knowledge)
-    from tools.doc_reader_engine import scan_itc_marketing_workspace, read_itc_brand_document
-    workspace_summary = scan_itc_marketing_workspace()
+    from tools.doc_reader_engine import list_marketing_folders, read_marketing_document
+    workspace_summary = list_marketing_folders()
     
     matched_files = []
     query_lower = query.lower()
-    for cat, files in workspace_summary.get("categorized_files", {}).items():
-        for f in files:
-            if any(term in f["filename"].lower() for term in query_lower.split()):
-                matched_files.append(f)
+    for cat, files in workspace_summary.get("files_by_category", {}).items():
+        for fname in files:
+            if any(term in fname.lower() for term in query_lower.split()):
+                matched_files.append((cat, fname))
 
     snippets = []
-    for mf in matched_files[:3]:
-        doc_res = read_itc_brand_document(mf["filename"])
+    for cat, fname in matched_files[:3]:
+        doc_res = read_marketing_document(fname, cat)
         if doc_res.get("status") == "SUCCESS":
-            snippet = doc_res.get("text_preview", "")[:300]
+            snippet = doc_res.get("content", "")[:300]
             snippets.append({
-                "title": mf["filename"],
-                "category": mf.get("category", "General"),
+                "title": fname,
+                "category": cat,
                 "snippet": snippet,
-                "uri": mf.get("filepath", "")
+                "uri": doc_res.get("filepath", "")
             })
 
     return {
@@ -247,9 +247,9 @@ def check_available_connectors() -> Dict[str, Any]:
     gcp_project = proj
 
     try:
-        from tools.doc_reader_engine import scan_itc_marketing_workspace
-        local_summary = scan_itc_marketing_workspace()
-        local_files_count = local_summary.get("total_files", 0)
+        from tools.doc_reader_engine import list_marketing_folders
+        local_summary = list_marketing_folders()
+        local_files_count = sum(len(f) for f in local_summary.get("files_by_category", {}).values())
     except Exception:
         local_files_count = 10
 
