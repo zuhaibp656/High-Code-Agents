@@ -476,6 +476,18 @@ def render_png_banner(brand_data: Dict[str, Any], spec: Dict[str, Any], prompt: 
     if h > 70:
         draw.text((10, 32), tagline[:35], fill=(240, 240, 240))
 
+    # Paste Official ITC Logo Badge
+    logo_path = os.path.join(ITC_MARKETING_DIR, "Brand Guidelines", "ITC.png")
+    if os.path.exists(logo_path):
+        try:
+            raw_logo = Image.open(logo_path).convert("RGBA")
+            logo_w = max(24, int(min(w, h) * 0.20))
+            logo_h = max(12, int(raw_logo.height * (logo_w / raw_logo.width)))
+            logo_resized = raw_logo.resize((logo_w, logo_h), Image.Resampling.LANCZOS)
+            img.paste(logo_resized, (w - logo_w - 6, 6), logo_resized)
+        except Exception:
+            pass
+
     # CTA Button
     if h >= 100 and w >= 120:
         cta_x1, cta_y1 = 10, h - 35

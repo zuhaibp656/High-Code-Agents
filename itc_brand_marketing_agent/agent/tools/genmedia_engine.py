@@ -120,6 +120,19 @@ def render_fallback_png_banner(brand_data: Dict[str, Any], spec: Dict[str, Any],
     if h > 60:
         draw.text((10, 30), tagline[:40], fill=(255, 255, 255))
 
+    # Paste Official ITC Logo Badge
+    logo_path = os.path.join(ITC_MARKETING_DIR, "Brand Guidelines", "ITC.png")
+    if os.path.exists(logo_path):
+        try:
+            raw_logo = Image.open(logo_path).convert("RGBA")
+            logo_w = max(24, int(min(w, h) * 0.20))
+            logo_h = max(12, int(raw_logo.height * (logo_w / raw_logo.width)))
+            logo_resized = raw_logo.resize((logo_w, logo_h), Image.Resampling.LANCZOS)
+            # Position at top right
+            img.paste(logo_resized, (w - logo_w - 6, 6), logo_resized)
+        except Exception:
+            pass
+
     # CTA Button
     if h >= 90 and w >= 120:
         cta_x1, cta_y1 = 10, h - 35
@@ -150,7 +163,7 @@ def synthesize_creative_sub_prompts(brand_name: str, core_prompt: str, format_ty
     sensory = brand_data["sensory_triggers"][0]
 
     hero_prompt = (
-        f"A cinematic, ultra-photorealistic hero shot of {brand_title} {hero_product}. "
+        f"A cinematic, ultra-photorealistic hero shot of {brand_title} {hero_product} with official ITC corporate logo endorsement mark. "
         f"Showcasing {sensory}, with glistening rich texture, authentic packaging in {palette.get('primary', '#2A1810')} and {palette.get('secondary', '#D4AF37')} tones. "
         f"Studio macro lens, 8k resolution, razor-sharp edge focus, award-winning commercial food/cosmetic photography."
     )
@@ -165,7 +178,7 @@ def synthesize_creative_sub_prompts(brand_name: str, core_prompt: str, format_ty
     cta_text = f"Buy Now on Blinkit & Zepto"
 
     master_prompt = (
-        f"Commercial advertising creative for {brand_title}. {hero_prompt} Situated in: {background_prompt}. "
+        f"Commercial advertising creative for {brand_title} proudly endorsed by ITC Limited with official ITC logo badge. {hero_prompt} Situated in: {background_prompt}. "
         f"Headline: '{headline_copy}'. CTA: '{cta_text}'. Clean negative space for typography, IAB compliant layout, no distorted lettering."
     )
 
@@ -349,7 +362,8 @@ def generate_marketing_image(
                         f"1. NATIVE IN-IMAGE TYPOGRAPHY: The advertising headline '{headline}' must be artistically and seamlessly integrated directly into the scene composition in premium commercial 3D typography or elegant magazine advertising lettering, with realistic scene lighting, shadows, reflections, and natural depth of field.\n"
                         f"2. PRODUCT & SCENE: Feature the {brand_data['brand_name']} product hero naturally integrated into an authentic lifestyle or sensory environment with cinematic lighting and photorealistic textures.\n"
                         f"3. AUTHENTIC PHOTOREALISM: Everything must look natively photographed as a cohesive, high-end print or digital commercial. Do NOT describe flat synthetic digital overlays or rectangular text boxes.\n"
-                        f"4. Output ONLY the final rewritten prompt without conversational filler.\n\n"
+                        f"4. ITC CORPORATE LOGO & BRANDMARK: Prominently feature the official ITC logo brandmark and endorsement badge in the corner or beside the packaging to ensure clear ITC brand ownership.\n"
+                        f"5. Output ONLY the final rewritten prompt without conversational filler.\n\n"
                         f"Original visual prompt: {prompt}\n"
                         f"Brand: {brand_data['brand_name']}\n"
                         f"Headline / Hook to integrate: {headline}\n"
@@ -608,9 +622,9 @@ def generate_marketing_video(
         {
             "timestamp": "4.0s - 6.0s",
             "scene": "Brand Outro & Call to Action",
-            "visual": f"Signature packaging beauty shot with glowing CTA badge.",
-            "audio": "Brand sonic logo melody.",
-            "text": "Order Now on Blinkit & Zepto"
+            "visual": f"Signature {brand_data['brand_name']} packaging beauty shot with official ITC corporate logo watermark badge and glowing CTA button.",
+            "audio": "ITC brand sonic logo melody.",
+            "text": f"ITC Limited • {brand_data['brand_name']} • Order Now on Blinkit & Zepto"
         }
     ]
 
@@ -623,7 +637,13 @@ def generate_marketing_video(
                 enhance_resp = client.models.generate_content(
                     model='gemini-2.5-pro',
                     contents=(
-                        f"You are a prompt engineering expert for video generation models. Rewrite the following prompt to ensure the output is a highly realistic, professional, cinematic lifestyle video ad. The video should feature the product naturally integrated into a realistic scene, striking a balance between lifestyle storytelling and clear product visibility. It should feel like a high-end commercial, not a flashy or isolated studio product render. Add keywords for natural lighting, lifestyle cinematography, live-action footage, realistic camera movement, and cohesive composition. Output ONLY the rewritten prompt without any conversational text.\n\nOriginal prompt: {prompt}"
+                        f"You are a prompt engineering expert for commercial video generation models. Rewrite the following prompt to ensure the output is a highly realistic, broadcast-ready cinematic commercial video ad for {brand_data['brand_name']}.\n"
+                        f"CRITICAL BRANDING & LOGO INSTRUCTIONS:\n"
+                        f"1. ITC CORPORATE LOGO: Always incorporate the official ITC corporate logo brandmark and endorsement badge alongside the {brand_data['brand_name']} product packaging throughout the ad and in the final outro frame.\n"
+                        f"2. CINEMATIC VISUAL STORYTELLING: The video should feature the product naturally integrated into a realistic scene, striking a balance between lifestyle storytelling and clear product visibility with natural lighting, lifestyle cinematography, live-action footage, and realistic camera movement.\n"
+                        f"3. Output ONLY the rewritten prompt without conversational filler.\n\n"
+                        f"Original prompt: {prompt}\n"
+                        f"Brand: {brand_data['brand_name']}"
                     )
                 )
                 if enhance_resp.text:
