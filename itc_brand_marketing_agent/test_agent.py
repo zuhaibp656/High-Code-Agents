@@ -224,15 +224,22 @@ def test_m365_connector_engine():
     from agent.tools.m365_connector_engine import (
         search_enterprise_sharepoint_knowledge,
         teams_post_campaign_preview,
-        outlook_send_campaign_summary
+        outlook_send_campaign_summary,
+        check_available_connectors
     )
 
-    # 1. Test SharePoint Search / Fallback
+    # 1. Test Connector Availability Inspection
+    conn_status = check_available_connectors()
+    assert conn_status["status"] == "SUCCESS"
+    assert "connectors" in conn_status
+    assert "sharepoint_onedrive_datastore" in conn_status["connectors"]
+
+    # 2. Test SharePoint Search / Fallback
     sp_res = search_enterprise_sharepoint_knowledge("Dark Fantasy indulgence guidelines")
     assert sp_res["query"] == "Dark Fantasy indulgence guidelines"
     assert sp_res["results_count"] >= 1
 
-    # 2. Test Teams Campaign Card Formatting
+    # 3. Test Teams Campaign Card Formatting
     teams_res = teams_post_campaign_preview(
         brand_name="Sunfeast Dark Fantasy",
         campaign_theme="festive_indulgence",
@@ -243,7 +250,7 @@ def test_m365_connector_engine():
     )
     assert teams_res["status"] in ["SIMULATED_SUCCESS", "DELIVERED"]
 
-    # 3. Test Outlook Dispatch Summary
+    # 4. Test Outlook Dispatch Summary
     outlook_res = outlook_send_campaign_summary(
         recipient_email="brandmanager@itc.in",
         brand_name="Sunfeast Dark Fantasy",

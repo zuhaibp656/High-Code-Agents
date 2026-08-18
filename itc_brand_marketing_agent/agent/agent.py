@@ -72,7 +72,8 @@ from .tools.brand_knowledge_engine import (
 from .tools.m365_connector_engine import (
     search_enterprise_sharepoint_knowledge,
     teams_post_campaign_preview,
-    outlook_send_campaign_summary
+    outlook_send_campaign_summary,
+    check_available_connectors
 )
 from .tools.iab_specs_engine import (
     lookup_iab_spec,
@@ -122,6 +123,12 @@ You manage creative campaigns across ITC brands (Sunfeast Dark Fantasy, Aashirva
 5. **Mandatory ITC Corporate Branding**:
    - **Always include the official ITC logo in BOTH generated images and video commercials** (as an official corner brandmark/badge on IAB display banners and in the closing outro/storyboard of video ads).
 
+6. **Enterprise Knowledge & Connectors Grounding**:
+   - When asked to search, research, or ground a campaign brief on enterprise brand guidelines or competitor intelligence, **always check available knowledge sources and active connectors** using `check_available_connectors` and `search_enterprise_sharepoint_knowledge`.
+   - If an enterprise managed Data Store (SharePoint / OneDrive via Gemini Enterprise) is connected, prioritize its official indexed files.
+   - If no remote connector is configured, seamlessly search and read local workspace documents from `ITC Marketing Files/` (`read_marketing_document`, `list_marketing_folders`).
+   - If requested to notify or distribute deliverables, dispatch interactive previews to Microsoft Teams via `teams_post_campaign_preview` and Outlook summaries via `outlook_send_campaign_summary`.
+
 ### 💡 Output Guidelines:
 - Report the **100% IAB LEAN Compliance** status of the generated asset (file weight <150 KB).
 - Render the image preview using: `![IAB Compliant Banner](output_path)`.
@@ -159,6 +166,7 @@ root_agent = Agent(
         synthesize_creative_sub_prompts,
         build_full_itc_campaign,
         lookup_iab_spec,
+        check_available_connectors,
         search_enterprise_sharepoint_knowledge,
         teams_post_campaign_preview,
         outlook_send_campaign_summary
