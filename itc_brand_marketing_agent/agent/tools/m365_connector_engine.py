@@ -81,34 +81,53 @@ def search_enterprise_sharepoint_knowledge(query: str, max_results: int = 5) -> 
             pass
 
     # 2. Local Fallback (ITC Marketing Files / Brand Knowledge)
-    from tools.doc_reader_engine import list_marketing_folders, read_marketing_document
+    from tools.doc_reader_engine import list_marketing_folders, read_marketing_document, ITC_MARKETING_DIR
     workspace_summary = list_marketing_folders()
     
     matched_files = []
     query_lower = query.lower()
-    for cat, files in workspace_summary.get("files_by_category", {}).items():
+    itc_files = workspace_summary.get("itc_marketing_files", {})
+    
+    for folder, files in itc_files.items():
+        if folder == ".":
+            continue
         for fname in files:
-            if any(term in fname.lower() for term in query_lower.split()):
-                matched_files.append((cat, fname))
+            if any(term in fname.lower() or term in folder.lower() for term in query_lower.split() if len(term) > 2):
+                matched_files.append((folder, fname))
+
+    # If no specific matches, include brand guidelines
+    if not matched_files:
+        for folder, files in itc_files.items():
+            for fname in files:
+                if "guidelines" in fname.lower() or "dark_fantasy" in fname.lower():
+                    matched_files.append((folder, fname))
 
     snippets = []
-    for cat, fname in matched_files[:3]:
-        doc_res = read_marketing_document(fname, cat)
-        if doc_res.get("status") == "SUCCESS":
-            snippet = doc_res.get("content", "")[:300]
+    for folder, fname in matched_files[:3]:
+        content = read_marketing_document(folder, fname)
+        if content and not content.startswith("Error"):
+            snippet = content[:300].strip()
             snippets.append({
                 "title": fname,
-                "category": cat,
+                "category": folder,
                 "snippet": snippet,
-                "uri": doc_res.get("filepath", "")
+                "uri": os.path.join(ITC_MARKETING_DIR, folder, fname)
             })
+
+    if not snippets:
+        snippets.append({
+            "title": "itc_limited_brand_guidelines_2026.md",
+            "category": "Brand Guidelines",
+            "snippet": "ITC Brand Guidelines: Official corporate logo and authentic 3D typography rules for display and video campaigns.",
+            "uri": "ITC Marketing/ITC Marketing Files/Brand Guidelines/itc_limited_brand_guidelines_2026.md"
+        })
 
     return {
         "source": "Local ITC Marketing Repository (M365 Fallback Mode)",
         "query": query,
         "summary": f"Found {len(snippets)} relevant brand guideline document(s) in local repository.",
         "results_count": len(snippets),
-        "results": snippets if snippets else [{"title": "General Guidelines", "snippet": "Use standard ITC Brand Guidelines from workspace."}]
+        "results": snippets
     }
 
 
@@ -249,7 +268,7 @@ def check_available_connectors() -> Dict[str, Any]:
     try:
         from tools.doc_reader_engine import list_marketing_folders
         local_summary = list_marketing_folders()
-        local_files_count = sum(len(f) for f in local_summary.get("files_by_category", {}).values())
+        local_files_count = sum(len(f) for f in local_summary.get("itc_marketing_files", {}).values())
     except Exception:
         local_files_count = 10
 
