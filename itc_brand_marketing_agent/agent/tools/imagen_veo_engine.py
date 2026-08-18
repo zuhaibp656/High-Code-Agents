@@ -53,7 +53,7 @@ def _get_gcs_bucket_name() -> str:
     if os.environ.get("GCS_BUCKET_NAME"):
         return os.environ["GCS_BUCKET_NAME"]
     proj = _get_project_id()
-    return f"itc-brand-marketing-assets-{proj}" if proj else "itc-brand-marketing-assets"
+    return f"itc-brand-marketing-assets-v2-{proj}" if proj else "itc-brand-marketing-assets-v2-zuhaibp-ai"
 
 GCS_BUCKET_NAME = _get_gcs_bucket_name()
 

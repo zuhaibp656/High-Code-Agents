@@ -127,9 +127,9 @@ You manage creative campaigns across ITC brands (Sunfeast Dark Fantasy, Aashirva
 """
 
 root_agent = Agent(
-    name="itc_brand_marketing_orchestrator",
+    name="itc_brand_marketing_orchestrator_v2",
     model=vertex_model,
-    description="ITC Brand Marketing AI Master Orchestrator Agent built with Google ADK. Generates IAB-approved display banners, Veo video ads, and multi-channel media plans with dynamic sizing and direct downloads.",
+    description="ITC Brand Marketing AI Master Orchestrator Agent v2 built with Google ADK. Generates IAB-approved display banners, Veo video ads, and multi-channel media plans with dynamic sizing and direct downloads.",
     instruction=MAIN_AGENT_INSTRUCTION,
     sub_agents=[
         campaign_hook_agent,

@@ -208,7 +208,7 @@ def test_campaign_planner_end_to_end():
 
 def test_adk_agent_architecture():
     """Verifies that root_agent and all 4 sub_agents conform to Google ADK specifications."""
-    assert root_agent.name == "itc_brand_marketing_orchestrator"
+    assert "itc_brand_marketing_orchestrator" in root_agent.name
     assert len(root_agent.sub_agents) == 4
     assert len(root_agent.tools) >= 10
 
