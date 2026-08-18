@@ -6,6 +6,11 @@ cd "$DIR"
 
 PORT=${1:-8080}
 
+if [ ! -f "$DIR/venv/bin/adk" ]; then
+    echo "⚡ Initializing environment via setup.sh..."
+    bash "$DIR/setup.sh"
+fi
+
 if [ -f "$DIR/.env" ]; then
     set -a
     source "$DIR/.env"
